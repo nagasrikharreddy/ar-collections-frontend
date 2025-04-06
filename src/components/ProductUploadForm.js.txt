@@ -1,0 +1,44 @@
+import React, { useState } from "react";
+import axios from "axios";
+
+const ProductUploadForm = () => {
+  const [formData, setFormData] = useState({
+    name: "",
+    price: "",
+    image: "",
+    description: "",
+    category: ""
+  });
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/products`, formData);
+      alert("Product added successfully!");
+      console.log("Saved product:", res.data);
+    } catch (err) {
+      console.error("Error uploading product:", err);
+      alert("Failed to add product.");
+    }
+  };
+
+  return (
+    <div>
+      <h2>Upload New Product</h2>
+      <form onSubmit={handleSubmit}>
+        <input type="text" name="name" placeholder="Product Name" onChange={handleChange} required /><br />
+        <input type="number" name="price" placeholder="Price" onChange={handleChange} required /><br />
+        <input type="text" name="image" placeholder="Image URL" onChange={handleChange} required /><br />
+        <input type="text" name="description" placeholder="Description" onChange={handleChange} required /><br />
+        <input type="text" name="category" placeholder="Category" onChange={handleChange} required /><br />
+        <button type="submit">Add Product</button>
+      </form>
+    </div>
+  );
+};
+
+export default ProductUploadForm;

@@ -1,0 +1,88 @@
+import React, { useState } from "react";
+import axios from "axios";
+
+const AdminUpload = () => {
+  const [product, setProduct] = useState({
+    name: "",
+    price: "",
+    category: "",
+    imageUrl: "",
+  });
+
+  const [message, setMessage] = useState("");
+  const API_BASE = process.env.REACT_APP_API_URL;
+
+  const handleChange = (e) => {
+    setProduct({ ...product, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const res = await axios.post(`${API_BASE}/api/products`, product);
+      setMessage("✅ Product uploaded successfully!");
+      setProduct({ name: "", price: "", category: "", imageUrl: "" });
+    } catch (err) {
+      console.error("Upload error:", err);
+      setMessage("❌ Error uploading product.");
+    }
+  };
+
+  return (
+    <div style={{ padding: "30px", maxWidth: "500px", margin: "auto" }}>
+      <h2>Admin - Upload Product</h2>
+      {message && <p>{message}</p>}
+      <form onSubmit={handleSubmit}>
+        <div>
+          <label>Product Name:</label><br />
+          <input
+            type="text"
+            name="name"
+            value={product.name}
+            onChange={handleChange}
+            required
+            style={{ width: "100%" }}
+          />
+        </div>
+        <div>
+          <label>Price (₹):</label><br />
+          <input
+            type="number"
+            name="price"
+            value={product.price}
+            onChange={handleChange}
+            required
+            style={{ width: "100%" }}
+          />
+        </div>
+        <div>
+          <label>Category:</label><br />
+          <input
+            type="text"
+            name="category"
+            value={product.category}
+            onChange={handleChange}
+            required
+            style={{ width: "100%" }}
+          />
+        </div>
+        <div>
+          <label>Image URL:</label><br />
+          <input
+            type="text"
+            name="imageUrl"
+            value={product.imageUrl}
+            onChange={handleChange}
+            style={{ width: "100%" }}
+          />
+        </div>
+        <button type="submit" style={{ marginTop: "15px" }}>
+          Upload Product
+        </button>
+      </form>
+    </div>
+  );
+};
+
+export default AdminUpload;
